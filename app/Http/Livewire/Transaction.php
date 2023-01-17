@@ -6,6 +6,7 @@ use Livewire\Component;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
+use App\Models\Transaction as TransactionModel;
 
 class Transaction extends Component
 {
@@ -26,18 +27,41 @@ class Transaction extends Component
 
     public function transaction($file)
     {
+        $transactionModel = new TransactionModel();
         $this->exporting = true;
         $this->exportFinished = false;
         $this->filename = time().'.xlsx';
         $data['start_date']=$this->start_date;
         $data['end_date']=$this->end_date;
        
-        
-        $batch = Bus::batch([
-            new Allrecord($this->filename,$data),
-        ])->dispatch();
+        $total =$transactionModel->searchQuery($data)->count();
+        $chunksize =5000;
+        for($i=0; $i<$total; )
+        {
+            //$end =$i+$chunksize;
+            $batches[]=  new Allrecord($this->filename,$data,$i,$chunksize);
+            $i+=$chunksize;
+            
+        }
+
+       /* $batch = Bus::batch([
+            new Allrecord($this->filename,$data,0,10000)
+        ])->dispatch();*/
+        $filename = $this->filename;
+        $batch = Bus::batch($batches)->name('Export Users')
+        ->then(function () use ($filename) {
+            $file = storage_path( $filename);  
+        })
+        ->catch(function () {
+        })
+        ->finally(function ()  { 
+        })->dispatch();
+
+       // $batch = Bus::batch($batches)->dispatch();
          
+       
         $this->batchId = $batch->id;
+        
     }
 
     public function getExportBatchProperty()

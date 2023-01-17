@@ -18,16 +18,18 @@ class AllrecordExport implements WithMapping,FromQuery,ShouldQueue,WithHeadings,
     */
     use Exportable;
     
-    public function __construct($request)
+    public function __construct($request ,$start=0,$limit=10000)
     {
         $this->request = $request;
+        $this->start = $start;
+        $this->limit = $limit;
     }
     
     public function query()
     {
         $model = new Transaction;
         $model = $model->query()->with(['user']);
-        $start_date = (isset($this->request['start_date']) && !empty($this->request['start_date']))?$this->request['start_date']:date('Y-m-d');
+        $start_date = (isset($this->request['start_date']) && !empty($this->request['start_date']))?$this->request['start_date']:'';
        
         $end_date = (isset($this->request['end_date']) && !empty($this->request['end_date']))?$this->request['end_date']:'';
         if(!empty($start_date)){
@@ -36,6 +38,8 @@ class AllrecordExport implements WithMapping,FromQuery,ShouldQueue,WithHeadings,
         if(!empty($end_date)){
             $model=  $model->where('created_at','<=',$end_date);
         }
+        $model = $model->skip($this->start)->take($this->limit);
+        //dd($model->toSql());
         return $model;
     }
 
