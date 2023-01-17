@@ -26,7 +26,14 @@
                                 <th>ID</th>
                                 <th>Description</th>
                                 <th>Amount</th>
-                                <th>User</th>
+                               
+                                <th>Name</th>
+                                <th>Phone</th>
+                                <th>Address</th>
+                                <th>City</th>
+                               
+                                <th>Zip code</th>
+                             
                                 <th>Created At</th>
                             </tr>
                         </thead>
@@ -37,6 +44,12 @@
                                     <td>{{ $transaction->description }}</td>
                                     <td>{{ number_format($transaction->amount / 100, 2) }}</td>
                                     <td>{{ $transaction->user->name }}</td>
+                                    <td>{{ $transaction->phone }}</td>
+                                    <td>{{ $transaction->address }}</td>
+                                    <td>{{ $transaction->city }}</td>
+                                    <td>{{ $transaction->pincode }}</td>
+                                   
+                                    
                                     <td>{{ $transaction->created_at }}</td>
                                 </tr>
                             @endforeach

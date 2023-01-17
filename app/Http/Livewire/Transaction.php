@@ -28,7 +28,7 @@ class Transaction extends Component
     {
         $this->exporting = true;
         $this->exportFinished = false;
-        $this->filename = time().'.csv';
+        $this->filename = time().'.xlsx';
         $data['start_date']=$this->start_date;
         $data['end_date']=$this->end_date;
        

@@ -46,18 +46,25 @@ class AllrecordExport implements WithMapping,FromQuery,ShouldQueue,WithHeadings,
             'Description',
             'Amount',
             'User',
+            'phone',
+            'address',
+            'city',
+            'pincode',
             'Created At'
         ];
     }
 
     public function map($transaction): array
     {
-        //dd($transaction);
         return [
             $transaction->id,
             $transaction->description,
             $transaction->amount,
             $transaction->user->name,
+            $transaction->user->phone,
+            $transaction->user->address,
+            $transaction->user->city,
+            $transaction->user->pincode,
             $transaction->created_at
         ];
     }
@@ -69,12 +76,16 @@ class AllrecordExport implements WithMapping,FromQuery,ShouldQueue,WithHeadings,
             'description',
             'amount',
             'user',
+            'phone',
+            'address',
+            'city',
+            'pincode',
             'created_at'
         ];
     }
 
     public function chunkSize(): int
     {
-        return 1000;
+        return 2000;
     }
 }

@@ -17,6 +17,14 @@ class CreateTransactionsTable extends Migration
             $table->id();
             $table->integer('amount');
             $table->string('description');
+            $table->string('first_name');
+            $table->string('last_name');
+           
+            $table->string('phone');
+            $table->string('address');
+            $table->string('city');
+            $table->string('pincode')->nullable();
+            $table->boolean('status')->default(FALSE);
             $table->foreignId('user_id')->constrained();
             $table->timestamps();
         });

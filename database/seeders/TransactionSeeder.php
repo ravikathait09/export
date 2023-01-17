@@ -16,23 +16,29 @@ class TransactionSeeder extends Seeder
     public function run()
     {
         $faker = \Faker\Factory::create();
-        $users = collect(User::all()->modelKeys());
-        $data = [];
+        
+        $row = [];
 
-        for ($i = 0; $i < 15000; $i++) {
-            $data[] = [
+        for ($i = 0; $i < 100000; $i++) {
+            $row[] = [
                 'amount'        => rand(10000, 99999),
                 'description'   => $faker->sentence(),
-                'user_id'       => $users->random(),
+                'first_name' => $faker->firstName(),
+                'last_name' => $faker->lastName(),
+                'phone' => $faker->phoneNumber(),
+                'address' => $faker->address(),
+                'city' => $faker->city(),
+                'pincode'       => $faker->postcode(),
                 'created_at'    => now(),
                 'updated_at'    => now(),
+                'user_id'=>$i+1
             ];
+            if($i%1000){
+                Transaction::insert($row);
+                $row =[];
+            }
         }
 
-        $chunks = array_chunk($data, 5000);
-
-        foreach ($chunks as $chunk) {
-            Transaction::insert($chunk);
-        }
+        
     }
 }

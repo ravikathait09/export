@@ -19,7 +19,7 @@ class UserSeeder extends Seeder
 
         $data = [];
 
-        for ($i = 0; $i < 15000; $i++) {
+        for ($i = 0; $i < 100000; $i++) {
             $data[] = [
                 'name' => $faker->name(),
                 'email' => $faker->unique()->safeEmail(),
@@ -27,12 +27,11 @@ class UserSeeder extends Seeder
                 'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
                 'remember_token' => Str::random(10),
             ];
+            if($i%1000){
+                User::insert($data);
+                $data =[];
+            }
         }
 
-        $chunks = array_chunk($data, 1000);
-
-        foreach ($chunks as $chunk) {
-            User::insert($chunk);
-        }
     }
 }

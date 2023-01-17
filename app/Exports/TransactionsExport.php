@@ -26,6 +26,10 @@ class TransactionsExport implements FromQuery, WithHeadings, WithMapping
             'Description',
             'Amount',
             'User',
+            'phone',
+            'address',
+            'city',
+            'pincode',
             'Created At'
         ];
     }
@@ -37,6 +41,10 @@ class TransactionsExport implements FromQuery, WithHeadings, WithMapping
             $transaction->description,
             $transaction->amount,
             $transaction->user->name,
+            $transaction->user->phone,
+            $transaction->user->address,
+            $transaction->user->city,
+            $transaction->user->pincode,
             $transaction->created_at
         ];
     }
@@ -48,6 +56,10 @@ class TransactionsExport implements FromQuery, WithHeadings, WithMapping
             'description',
             'amount',
             'user',
+            'phone',
+            'address',
+            'city',
+            'pincode',
             'created_at'
         ];
     }
