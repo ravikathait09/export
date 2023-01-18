@@ -6,10 +6,12 @@ use Livewire\Component;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
+use Livewire\WithPagination;
 use App\Models\Transaction as TransactionModel;
 
 class Transaction extends Component
 {
+    use WithPagination;
    
     public $batchId;
     public $exporting = false;
@@ -22,6 +24,12 @@ class Transaction extends Component
     public $max;
     public $request;
     protected $export ;
+    //public $name;
+    public $transactionModel;
+    public $searchpin;
+    public $searchdesc;
+    protected $paginationTheme = 'bootstrap';
+
 
     
 
@@ -33,20 +41,19 @@ class Transaction extends Component
         $this->filename = time().'.xlsx';
         $data['start_date']=$this->start_date;
         $data['end_date']=$this->end_date;
+        $data['searchpin']=$this->searchpin;
+        $data['searchdesc']=$this->searchdesc;
+        //public $searchpin;
        
         $total =$transactionModel->searchQuery($data)->count();
         $chunksize =5000;
         for($i=0; $i<$total; )
         {
-            //$end =$i+$chunksize;
             $batches[]=  new Allrecord($this->filename,$data,$i,$chunksize);
-            $i+=$chunksize;
-            
+            $i+=$chunksize; 
         }
 
-       /* $batch = Bus::batch([
-            new Allrecord($this->filename,$data,0,10000)
-        ])->dispatch();*/
+      
         $filename = $this->filename;
         $batch = Bus::batch($batches)->name('Export Users')
         ->then(function () use ($filename) {
@@ -55,11 +62,8 @@ class Transaction extends Component
         ->catch(function () {
         })
         ->finally(function ()  { 
-        })->dispatch();
 
-       // $batch = Bus::batch($batches)->dispatch();
-         
-       
+        })->dispatch();
         $this->batchId = $batch->id;
         
     }
@@ -71,6 +75,13 @@ class Transaction extends Component
         }
         return Bus::findBatch($this->batchId);
     }
+
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+
+    
 
    
 
@@ -94,9 +105,26 @@ class Transaction extends Component
         }
     }
 
-    public function boot(Request $requst)
+    
+
+    public function updatingsearchpin(): void
     {
-       
+        $this->gotoPage(1);
+    }
+
+    public function updatingsearchdesc(): void
+    {
+        $this->gotoPage(1);
+    }
+
+    public function updatingstart_date(): void
+    {
+        $this->gotoPage(1);
+    }
+
+    public function updatingend_date(): void
+    {
+        $this->gotoPage(1);
     }
     
     public function render()
@@ -106,6 +134,13 @@ class Transaction extends Component
         }else{
             $this->max = date('Y-m-d');
         }
-        return view('livewire.transaction');
+        $transactionModel = new TransactionModel();
+        $data['start_date']=$this->start_date;
+        $data['end_date']=$this->end_date;
+        $data['searchpin']=$this->searchpin;
+        $data['searchdesc']=$this->searchdesc;
+
+        $transactions =  $transactionModel->searchQuery($data)->paginate(30);
+        return view('livewire.transaction',compact('transactions'));
     }
 }

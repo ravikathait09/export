@@ -19,14 +19,22 @@ class Transaction extends Model
     public function searchQuery($data)
     {
         $model =  $this->query()->with(['user']);
-        $start_date = (isset($this->request['start_date']) && !empty($this->request['start_date']))?$this->request['start_date']:'';
+        $start_date = (isset($data['start_date']) && !empty($data['start_date']))?$data['start_date']:'';
        
-        $end_date = (isset($this->request['end_date']) && !empty($this->request['end_date']))?$this->request['end_date']:'';
+        $end_date = (isset($data['end_date']) && !empty($data['end_date']))?$data['end_date']:'';
         if(!empty($start_date)){
             $model=  $model->where('created_at','>=',$start_date);
         }
         if(!empty($end_date)){
             $model=  $model->where('created_at','<=',$end_date);
+        }
+
+        if(!empty($data['searchpin'])){
+            $model=  $model->where('pincode','=',$data['searchpin']);
+        }
+
+        if(!empty($data['searchdesc'])){
+            $model=  $model->where('description','LIKE',$data['searchdesc'].'%');
         }
         return $model;
 

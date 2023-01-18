@@ -6,58 +6,8 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">{{ __('Dashboard') }}</div>
-
-                <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
-
-                    <div class="mb-4 d-flex justify-content-between">
-                        @livewire('transaction', ['module' => 'ExportStudent'])
-                        
-                    </div>
-
-
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Description</th>
-                                <th>Amount</th>
-                               
-                                <th>Name</th>
-                                <th>Phone</th>
-                                <th>Address</th>
-                                <th>City</th>
-                               
-                                <th>Zip code</th>
-                             
-                                <th>Created At</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($transactions as $transaction)
-                                <tr>
-                                    <td>{{ $transaction->id }}</td>
-                                    <td>{{ $transaction->description }}</td>
-                                    <td>{{ number_format($transaction->amount / 100, 2) }}</td>
-                                    <td>{{ $transaction->user->name }}</td>
-                                    <td>{{ $transaction->phone }}</td>
-                                    <td>{{ $transaction->address }}</td>
-                                    <td>{{ $transaction->city }}</td>
-                                    <td>{{ $transaction->pincode }}</td>
-                                   
-                                    
-                                    <td>{{ $transaction->created_at }}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-
-                    {{ $transactions->links() }}
-                </div>
+                @livewire('transaction')
+                
             </div>
         </div>
     </div>

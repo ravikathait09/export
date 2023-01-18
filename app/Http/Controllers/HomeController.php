@@ -14,9 +14,9 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $transactions = Transaction::with('user')->simplePaginate(30);
+       // $transactions = Transaction::with('user')->simplePaginate(30);
 
-        return view('home', compact('transactions'));
+        return view('home', );
     }
 
     public function export()
